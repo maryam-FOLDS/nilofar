@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Nilofar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Roboto:wght@400;700&family=Satisfy&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Roboto', sans-serif;
+            color: white;
+        }
+
+        .interface {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+
+        /* Interface 1: Universe Theme */
+        #interface1 {
+            position: relative;
+            background-color: #000000; /* Fallback */
+            background-image:
+                /* Small, dense stars */
+                radial-gradient(1px 1px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 50px 160px, #ddd, rgba(0,0,0,0)),
+                radial-gradient(1.5px 1.5px at 90px 40px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 130px 80px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1.5px 1.5px at 160px 120px, #ddd, rgba(0,0,0,0)),
+                /* Larger, sparser stars */
+                radial-gradient(2px 2px at 25% 20%, white, rgba(0,0,0,0)),
+                radial-gradient(2.5px 2.5px at 55% 35%, white, rgba(0,0,0,0)),
+                radial-gradient(1.5px 1.5px at 70% 80%, white, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 85% 50%, white, rgba(0,0,0,0)),
+                radial-gradient(2.5px 2.5px at 15% 70%, white, rgba(0,0,0,0)),
+                /* Base universe gradient */
+                linear-gradient(to bottom, #020107 0%, #0a0d3d 50%, #1c133a 100%);
+            background-repeat: repeat; /* For the small star patterns if needed */
+            background-size:
+                200px 200px, 200px 200px, 200px 200px, 200px 200px, 200px 200px, 200px 200px, /* Small stars tile */
+                auto, auto, auto, auto, auto, /* Larger stars don't tile, they are percentages */
+                100% 100%; /* Gradient covers fully */
+        }
+
+        #moon {
+            width: 100px;
+            height: 100px;
+            background-color: #f8c3d0; /* Light pinkish moon */
+            border-radius: 50%;
+            box-shadow: 0 0 20px #f8c3d0, 0 0 40px #f8c3d0, 0 0 60px #f8c3d0, 0 0 80px #f5a9b8; /* Added more glow */
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+            z-index: 10; /* Ensure moon is above star layers if they somehow overlap weirdly */
+        }
+        #moon:active {
+            transform: scale(0.95);
+        }
+
+        #interface1-text {
+            margin-top: 30px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 3em; /* Slightly larger for impact */
+            color: #f0e6ef; /* Pale lavender, good contrast */
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.5), 0 0 10px #f8c3d0; /* More prominent shadow, subtle pink glow */
+            z-index: 10;
+        }
+
+        /* Interface 2: Typewriter */
+        #interface2 {
+            display: none; /* Initially hidden */
+            position: relative; /* For positioning the blurred background */
+        }
+
+        #blurred-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://raw.githubusercontent.com/maryam-FOLDS/nilofar/refs/heads/main/SAVE_20250516_113818.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(6px); /* Blur applied only to this background element */
+            z-index: -1; /* Ensure it's behind the typewriter container */
+        }
+
+        #typewriter-container {
+            background-color: rgba(0, 0, 0, 0.75); /* Slightly more opaque for cursive readability */
+            padding: 25px;
+            border-radius: 15px;
+            max-width: 85%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            z-index: 1; /* Ensure it's above the blurred background */
+        }
+
+        #typewriter-text {
+            font-family: 'Satisfy', cursive; /* Beautiful Cursive Font */
+            font-size: 1.6em; /* Increased size for cursive readability */
+            line-height: 1.7; /* Adjusted line height for cursive */
+            white-space: pre-wrap;
+            color: #f5f5f5;
+            text-align: left;
+            opacity: 1;
+        }
+        #typewriter-text .cursor {
+            display: inline-block;
+            animation: blink 1s step-end infinite;
+            font-weight: normal; /* Bold might look too heavy with cursive */
+            font-family: 'Roboto', sans-serif; /* Cursor can be a standard font */
+            margin-left: 3px;
+            color: #f5f5f5;
+        }
+
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Final Popup */
+        #final-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #final-popup-content {
+            background-color: rgba(26, 26, 46, 0.85);
+            padding: 30px 40px;
+            border-radius: 15px;
+            font-family: 'Roboto', sans-serif; /* Kept Roboto for clarity here */
+            font-size: 2em;
+            color: #ffc2d1;
+            text-shadow: 1px 1px 4px #000;
+            box-shadow: 0 0 30px rgba(255,194,209,0.5);
+            opacity: 1;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #interface1-text { font-size: 2.5em; }
+            #typewriter-container { max-width: 90%; padding: 20px; }
+            #typewriter-text { font-size: 1.3em; line-height: 1.6; }
+            #final-popup-content { font-size: 1.5em; padding: 20px 30px; }
+        }
+         @media (max-width: 480px) {
+            #interface1-text { font-size: 2.2em; }
+            #moon { width: 80px; height: 80px; }
+            #typewriter-container { max-width: 95%; padding: 15px; }
+            #typewriter-text { font-size: 1.1em; line-height: 1.5; }
+            #final-popup-content { font-size: 1.2em; padding: 15px 20px;}
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="interface1" class="interface">
+        <div id="moon"></div>
+        <p id="interface1-text">every beat started with you</p>
+    </div>
+
+    <div id="interface2" class="interface">
+        <div id="blurred-bg"></div>
+        <div id="typewriter-container">
+            <p id="typewriter-text">
+                <span id="typed-content"></span><span class="cursor">|</span>
+            </p>
+        </div>
+    </div>
+
+    <div id="final-popup" class="interface">
+        <div id="final-popup-content">
+            forever stronger together 💗🧿... I love you babe
+        </div>
+    </div>
+
+    <audio id="songPlayer" src="https://github.com/maryam-FOLDS/nilofar/raw/main/Perfect.mp3" preload="auto"></audio>
+
+    <script>
+        const interface1 = document.getElementById('interface1');
+        const interface2 = document.getElementById('interface2');
+        const moon = document.getElementById('moon');
+        const songPlayer = document.getElementById('songPlayer');
+        
+        const typewriterTextElement = document.getElementById('typewriter-text');
+        const typedContentSpan = document.getElementById('typed-content');
+        const cursorSpan = typewriterTextElement.querySelector('.cursor');
+
+        const finalPopup = document.getElementById('final-popup');
+
+        const TYPEWRITER_SPEED = 65; // Slightly adjusted for cursive readability
+        const POST_TYPEWRITER_DELAY = 2000;
+
+        const fullText = `Nilofar, tum meri zindagi ka sabse khoobsurat hissa ho 🌸. Har din, har pal tumhare saath jeena chahta hoon ⏳❤️. Tum meri pehli aur aakhri mohabbat ho 💍. Bas muje kabhi chor ke mat jana 🥺, main pura tut jaunga 💔. Tum meri wifey, meri best friend, meri duniya ho 👩‍❤️‍👨. Main har waqt tumse bepanah pyaar karta hoon 🌹, jitna mere se hua, utna diya, aur aage bhi Inshallah hamesha tumse waise hi pyaar karta rahunga 🤲🏼❤️.
+
+Tumhara saath hi meri zindagi ki sabse badi khushi hai 🎉. Jab tum hanshti ho 😊, mera dil khush ho jaata hai 💖, jab gale lagti ho 🤗, lagta hai jaise duniya ruk gayi ho ⏳. Tum mere liye har memory ko special bana deti ho 📸. Tum meri weird bestie bhi ho aur meri sabse caring wife bhi 🥰👑. Main tumhare bina kuch bhi nahi 😔, aur tumhare saath sab kuch hoon 🌍. Har lamha tumse aur zyada pyaar ho jaata hai 🔥.
+
+Mera baccha, meri jaan, I love you endlessly 👶🏼❤️. Tum meri zindagi ho 🌈, aur main hamesha tumhara saath chahunga 👫. Tum meri hamesha ki aur sirf meri ho 🔐💘. I promise, main kabhi give up nahi karunga 🙅🏻‍♂️, kyunki this is not just love — this is forever ♾️.`;
+
+        let lastTapTime = 0;
+        moon.addEventListener('click', () => {
+            const currentTime = new Date().getTime();
+            const timeSinceLastTap = currentTime - lastTapTime;
+
+            if (timeSinceLastTap < 300 && timeSinceLastTap > 0) {
+                interface1.style.display = 'none';
+                interface2.style.display = 'flex';
+                
+                songPlayer.play().catch(error => {
+                    console.error("Audio play failed:", error);
+                });
+                
+                startTypewriter();
+                lastTapTime = 0;
+            } else {
+                lastTapTime = currentTime;
+            }
+        });
+
+        function startTypewriter() {
+            let i = 0;
+            typedContentSpan.innerHTML = "";
+            if (cursorSpan) cursorSpan.style.display = 'inline-block';
+
+            function type() {
+                if (i < fullText.length) {
+                    typedContentSpan.innerHTML += fullText.charAt(i);
+                    i++;
+                    setTimeout(type, TYPEWRITER_SPEED);
+                } else {
+                    if (cursorSpan) cursorSpan.style.display = 'none';
+                    setTimeout(() => {
+                        finalPopup.style.display = 'flex';
+                    }, POST_TYPEWRITER_DELAY);
+                }
+            }
+            type();
+        }
+    </script>
+
+</body>
+</html>
